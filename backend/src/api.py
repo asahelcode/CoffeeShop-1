@@ -34,7 +34,7 @@ def get_drinks():
     return jsonify({
         'success': True,
         'drinks': [drink.short() for drink in drinks]
-    })
+    }), 200
 
 
 '''
@@ -53,7 +53,7 @@ def get_drink_detail(payload):
     return jsonify({
         'success': True,
         'drinks': [drink.long() for drink in drinks]
-    })
+    }), 200
 
 '''
 @DONE implement endpoint
@@ -80,7 +80,7 @@ def post_drink(payload):
     return jsonify({
         'success': True,
         'drinks': [drink.long()]
-    })
+    }), 200
 
 '''
 @DONE implement endpoint
@@ -93,10 +93,10 @@ def post_drink(payload):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks/<int:id>', methods=['PATCH'])
+@app.route('/drinks/<int:drink_id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
-def update_drink(payload, id):
-    drink = Drink.query.filter(Drink.id == id).one_or_none()
+def update_drink(payload, drink_id):
+    drink = Drink.query.get(drink_id)
     if drink is None:
         abort(404)
 
@@ -115,7 +115,7 @@ def update_drink(payload, id):
     return jsonify({
         'success': True,
         'drinks': [drink.long()]
-    })
+    }), 200
 
 '''
 @DONE implement endpoint
@@ -127,10 +127,10 @@ def update_drink(payload, id):
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks/<int:id>', methods=['DELETE'])
+@app.route('/drinks/<int:drink_id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
-def delete_drink(payload, id):
-    drink = Drink.query.get(id)
+def delete_drink(payload, drink_id):
+    drink = Drink.query.get(drink_id)
     if drink is None:
         abort(404)
 
@@ -139,7 +139,7 @@ def delete_drink(payload, id):
     return jsonify({
         'success': True,
         'delete': id
-    })
+    }), 200
 
 ## Error Handling
 '''
